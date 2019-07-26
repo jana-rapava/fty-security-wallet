@@ -19,6 +19,12 @@
 				]
 			},
 			{
+				"usage_id": "user_script",
+				"supported_types": [
+					"UserAndPassword"
+				]
+			},
+			{
 				"usage_id": "nobody_access",
 				"supported_types": [
 					"Snmpv3",
@@ -32,6 +38,12 @@
 				"client_regex": ".*",
 				"usages": [
 					"discovery_monitoring"
+				]
+			},
+			{
+				"client_regex": "_bios-script",
+				"usages": [
+					"user_script"
 				]
 			},
 			{
