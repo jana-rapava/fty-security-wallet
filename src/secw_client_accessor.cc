@@ -176,7 +176,6 @@ namespace secw
 
   void ClientAccessor::notificationHandler()
   {
-    std::cerr << "notificationHandler: init..." << std::endl;
     mlm_client_t *client = mlm_client_new ();
 
     if(client == NULL)
@@ -213,8 +212,6 @@ namespace secw
 
     zpoller_t *poller = zpoller_new (mlm_client_msgpipe (client), NULL);
 
-    std::cerr << "notificationHandler: init... Done." << std::endl;
-
     m_handlerFunctionThreadStarted.notify_all();
 
     while (!zsys_interrupted)
@@ -227,7 +224,6 @@ namespace secw
         //check if we need to leave the loop
         if(m_stopRequested)
         {
-          std::cerr << "notificationHandler: Stopping..." << std::endl;
           break;
         }
 
@@ -240,8 +236,6 @@ namespace secw
           if (numberOfFrame == 1)
           {
             ZstrGuard notification (zmsg_popstr (msg));
-
-            std::cerr << "notificationHandler: Notification received." << std::endl;
 
             cxxtools::SerializationInfo si = deserialize(std::string(notification.get()));
 
@@ -329,8 +323,6 @@ namespace secw
     zpoller_destroy(&poller);
     mlm_client_destroy(&client);
 
-    std::cerr << "notificationHandler: Stopping... Done." << std::endl;
-
   }
 
   //function which start or stop the thread if needed
@@ -348,7 +340,6 @@ namespace secw
     if(shouldBeRunning && (!m_notificationThread.joinable()))
     {
       std::unique_lock<std::mutex> lock(m_handlerFunctionStarting);
-      std::cerr << "Start the callback handler ...." << std::endl;
 
       //start
       m_stopRequested = false;
@@ -356,14 +347,11 @@ namespace secw
       m_notificationThread = std::thread(std::bind(&ClientAccessor::notificationHandler, this));
 
       m_handlerFunctionThreadStarted.wait(lock);
-      std::cerr << "Start the callback handler .... Done." << std::endl;
     }
     else if((!shouldBeRunning) && m_notificationThread.joinable())
     {
       //stop
       m_stopRequested = true;
-
-      std::cerr << "Stop the callback handler ...." << std::endl;
 
       //send a signal to the bus
       try
@@ -419,8 +407,6 @@ namespace secw
 
       //wait until the thread finish
       m_notificationThread.join();
-
-      std::cerr << "Stop the callback handler .... Done." << std::endl;
     }
 
   }
@@ -442,8 +428,6 @@ namespace secw
 
   void ClientAccessor::setCallbackOnCreate(CreatedCallback createdCallback)
   {
-    std::cerr << "Set callback CREATED" << std::endl;
-
     //1. Set the handler
     {
       //lock the mutex to set the handler
@@ -457,8 +441,6 @@ namespace secw
 
   void ClientAccessor::setCallbackOnDelete(DeletedCallback deletedCallback)
   {
-    std::cerr << "Set callback DELETED" << std::endl;
-
     //1. Set the handler
     {
       //lock the mutex to set the handler
@@ -472,8 +454,6 @@ namespace secw
 
   void ClientAccessor::setCallbackOnStart(StartedCallback startedCallback)
   {
-    std::cerr << "Set callback STARTED" << std::endl;
-
     //1. Set the handler
     {
       //lock the mutex to set the handler
