@@ -83,14 +83,14 @@ namespace secw
 
     //create a unique sender id: <clientId>.[thread id in hexa]
     pid_t threadId = gettid();
-    
+
     std::stringstream ss;
     ss << m_clientId << "." << std::setfill('0') << std::setw(sizeof(pid_t)*2) << std::hex << threadId;
 
     std::string uniqueId = ss.str();
-    
+
     int rc = mlm_client_connect (client, m_endPoint.c_str(), m_timeout, uniqueId.c_str());
-    
+
     if (rc != 0)
     {
       mlm_client_destroy(&client);
@@ -244,11 +244,11 @@ namespace secw
             std::cerr << "notificationHandler: Notification received." << std::endl;
 
             cxxtools::SerializationInfo si = deserialize(std::string(notification.get()));
-            
+
             std::string action = "";
             si.getMember ("action") >>= action;
-            
-            
+
+
             if (action == "CREATED")
             {
               //lock the mutex and check if we have a handler
@@ -264,7 +264,7 @@ namespace secw
 
                 m_createdCallback (portfolio, new_data);
               }
-              
+
             }
             else if (action == "UPDATED")
             {
@@ -312,7 +312,7 @@ namespace secw
 
             //end of handlers
           }
-          
+
         }
         catch(const std::exception& e)
         {
@@ -330,7 +330,7 @@ namespace secw
     mlm_client_destroy(&client);
 
     std::cerr << "notificationHandler: Stopping... Done." << std::endl;
-      
+
   }
 
   //function which start or stop the thread if needed
@@ -437,7 +437,7 @@ namespace secw
 
     //2. Update thread if needed
     updateNotificationThread();
-    
+
   }
 
   void ClientAccessor::setCallbackOnCreate(CreatedCallback createdCallback)
